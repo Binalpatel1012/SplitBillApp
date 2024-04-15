@@ -71,5 +71,40 @@ namespace SplitBillTests
             Assert.AreEqual(61.60m, tips["Heer"]);
             Assert.AreEqual(41.07m, tips["Shah"]);
         }
+
+        // Tests for TipPerPerson method
+        [TestMethod]
+        public void TipPerPerson_EqualSplit_ShouldReturnCorrectAmount() {
+            decimal totalPrice = 100m;
+            int numberOfPatrons = 4;
+            float tipPercentage = 25;  // 25% tip
+            decimal expectedTipPerPerson = 6.25m;
+            
+            decimal actualTipPerPerson = _calculator.TipPerPerson(totalPrice, numberOfPatrons, tipPercentage);
+
+            Assert.AreEqual(expectedTipPerPerson, actualTipPerPerson);
+        }
+
+        [TestMethod]
+        public void TipPerPerson_UnevenSplit_ShouldHandleRounding() {
+            decimal totalPrice = 123.45m;
+            int numberOfPatrons = 3;
+            float tipPercentage = 15.5f;
+            decimal expectedTipPerPerson = 6.37m;
+            
+            decimal actualTipPerPerson = _calculator.TipPerPerson(totalPrice, numberOfPatrons, tipPercentage);
+
+            Assert.AreEqual(expectedTipPerPerson, actualTipPerPerson);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TipPerPerson_ZeroPatrons_ShouldThrowArgumentException() {
+            decimal totalPrice = 200m;
+            int numberOfPatrons = 0;  // Zero patrons, should throw exception
+            float tipPercentage = 10;
+            
+            _calculator.TipPerPerson(totalPrice, numberOfPatrons, tipPercentage);  // This should throw an exception
+        }
     }
 }
